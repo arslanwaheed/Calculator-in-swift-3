@@ -17,29 +17,38 @@ class ViewController: UIViewController {
     var num2 = 0.0
     var result = 0.0
     
+    var operatorSelected = false
     var currentOperator = ""
     var containsPoint = false
+    var containsValue = false //for num2
     
     @IBAction func numericButtons(_ sender: UIButton) {
+        result = 0
         
         if sender.currentTitle == "." {
             if containsPoint == false {
                 currentDisplay += sender.currentTitle!
                 updateDisplay()
+                assignValue()
                 containsPoint = true
             }
         }else if sender.currentTitle == "0" || sender.currentTitle == "00" {
             if currentDisplay != "0" {
                 currentDisplay += sender.currentTitle!
                 updateDisplay()
+                assignValue()
+            }else {
+                assignValue()
             }
         }else{
             if currentDisplay == "0" {
                 currentDisplay = sender.currentTitle!
                 updateDisplay()
+                assignValue()
             }else{
                 currentDisplay += sender.currentTitle!
                 updateDisplay()
+                assignValue()
             }
         }
     }
@@ -51,7 +60,9 @@ class ViewController: UIViewController {
         containsPoint = false
         currentDisplay = "0"
         currentOperator = ""
+        operatorSelected = false
         updateDisplay()
+        containsValue = false
     }
     
     @IBAction func equalButton(_ sender: UIButton) {
@@ -59,26 +70,23 @@ class ViewController: UIViewController {
         if num1 == 0.0 {
             num1 = result
         }
-        if currentDisplay != "0" {
-            num2 = Double(currentDisplay)!
+        if operatorSelected && !containsValue {
+            num2 = num1
         }
-        
+ 
         result = calculate(opr: currentOperator)
         currentDisplay = String(result)
         updateDisplay()
         currentDisplay = "0"
         containsPoint = false
         num1 = result
+        operatorSelected = false
     }
     
     @IBAction func arithmeticButton(_ sender: UIButton) {
         currentOperator = sender.currentTitle!
+        operatorSelected = true
         
-        if num1 == 0{
-            num1 = Double(currentDisplay)!
-        }else{
-            num2 = Double(currentDisplay)!
-        }
         currentDisplay = "0"
         containsPoint = false
     }
@@ -122,6 +130,15 @@ class ViewController: UIViewController {
             
         }
         return result
+    }
+    
+    func assignValue() {
+        if operatorSelected {
+            num2 = Double(currentDisplay)!
+            containsValue = true
+        }else {
+            num1 = Double(currentDisplay)!
+        }
     }
     
 }
