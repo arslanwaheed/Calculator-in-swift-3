@@ -12,7 +12,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var displayLabel: UILabel!
     
-    var currentDisplay = ""
+    var currentDisplay = "0"
     var num1 = 0.0
     var num2 = 0.0
     var result = 0.0
@@ -28,9 +28,19 @@ class ViewController: UIViewController {
                 updateDisplay()
                 containsPoint = true
             }
+        }else if sender.currentTitle == "0" || sender.currentTitle == "00" {
+            if currentDisplay != "0" {
+                currentDisplay += sender.currentTitle!
+                updateDisplay()
+            }
         }else{
-            currentDisplay += sender.currentTitle!
-            updateDisplay()
+            if currentDisplay == "0" {
+                currentDisplay = sender.currentTitle!
+                updateDisplay()
+            }else{
+                currentDisplay += sender.currentTitle!
+                updateDisplay()
+            }
         }
     }
     
@@ -40,43 +50,37 @@ class ViewController: UIViewController {
         result = 0
         containsPoint = false
         currentDisplay = "0"
+        currentOperator = ""
         updateDisplay()
     }
     
     @IBAction func equalButton(_ sender: UIButton) {
         
-        currentDisplay = String(result)
-        num2 = Double(currentDisplay)!
+        if num1 == 0.0 {
+            num1 = result
+        }
+        if currentDisplay != "0" {
+            num2 = Double(currentDisplay)!
+        }
         
         result = calculate(opr: currentOperator)
         currentDisplay = String(result)
-        
         updateDisplay()
-        currentDisplay = ""
-        num1 = 0
-        num2 = 0
+        currentDisplay = "0"
+        containsPoint = false
+        num1 = result
     }
     
     @IBAction func arithmeticButton(_ sender: UIButton) {
-        if currentDisplay == "" {
-            return
-        }
-        
         currentOperator = sender.currentTitle!
         
         if num1 == 0{
             num1 = Double(currentDisplay)!
-            currentDisplay = ""
         }else{
             num2 = Double(currentDisplay)!
-            
-            result = calculate(opr: currentOperator)
-            currentDisplay = String(result)
-            
-            updateDisplay()
         }
-        currentDisplay = ""
-        
+        currentDisplay = "0"
+        containsPoint = false
     }
     
 //these are all my helper functions
